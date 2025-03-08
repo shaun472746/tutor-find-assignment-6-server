@@ -59,6 +59,7 @@ const refreshTokenValidationSchema = z.object({
  */
 const tutorValidationSchema = z.object({
   body: z.object({
+    id: z.string(),
     expertise: z
       .array(z.string(), { required_error: 'Expertises are required.' })
       .nonempty('At least one subject is required.'),

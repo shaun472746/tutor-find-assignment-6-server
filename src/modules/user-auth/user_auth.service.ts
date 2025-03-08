@@ -210,6 +210,14 @@ const createTutorProfileIntoDB = async (profile: ITutorProfile) => {
   }
 };
 
+const updateTutorProfileData = async (profile: ITutorProfile) => {
+  try {
+    await TutorProfile.findOneAndUpdate({ id: profile.id }, profile);
+  } catch (err: any) {
+    throw new Error(err);
+  }
+};
+
 const getUserProfileFromDB = async (id: string) => {
   const profile = (await TutorProfile.findOne({ id: id })) as ITutorProfile;
   return profile;
@@ -225,4 +233,5 @@ export const UserServices = {
   createTutorProfileIntoDB,
   getUserFromDB,
   getUserProfileFromDB,
+  updateTutorProfileData,
 };

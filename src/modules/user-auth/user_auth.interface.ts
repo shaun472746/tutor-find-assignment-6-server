@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { USER_ROLE } from './user_auth.constant';
 
 export interface TUser {
@@ -47,7 +47,7 @@ export type TUserWithId = TUser & {
  */
 
 export interface ITutorProfile {
-  id: string;
+  id: Types.ObjectId;
   expertise: string[]; // Define as an array
   subjects: string[];
   rating?: number;
@@ -57,4 +57,5 @@ export interface ITutorProfile {
   earning?: number;
   availability_slot: string[];
   hourly_rate: number;
+  totalEarning?: number;
 }

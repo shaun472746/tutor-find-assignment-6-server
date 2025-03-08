@@ -46,18 +46,24 @@ userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
 /**
  * update tutor profile
  */
-const TutorProfileSchema = new Schema<ITutorProfile>({
-  id: { type: String, required: true },
-  expertise: { type: [String], required: true }, // ✅ Fix: Define as array
-  subjects: { type: [String], required: true },
-  rating: { type: Number },
-  image: { type: String },
-  address: { type: String, required: true },
-  phone: { type: String, required: true },
-  earning: { type: Number },
-  availability_slot: { type: [String], required: true },
-  hourly_rate: { type: Number, required: true },
-});
+const TutorProfileSchema = new Schema<ITutorProfile>(
+  {
+    id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    expertise: { type: [String], required: true },
+    subjects: { type: [String], required: true },
+    rating: { type: Number, default: 0 },
+    image: { type: String },
+    address: { type: String, required: true },
+    phone: { type: String, required: true },
+    earning: { type: Number },
+    availability_slot: { type: [String], required: true },
+    hourly_rate: { type: Number, required: true },
+    totalEarning: { type: Number, required: false, default: 0 },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 export const TutorProfile = model<ITutorProfile>(
   'TutorProfile',

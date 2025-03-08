@@ -95,7 +95,12 @@ const getUserInfo = catchAsync(async (req, res) => {
  */
 
 const createTutorProfile = catchAsync(async (req, res) => {
-  await UserServices.createTutorProfileIntoDB(req.body);
+  if (req.body._id) {
+    await UserServices.updateTutorProfileData(req.body);
+  } else {
+    await UserServices.createTutorProfileIntoDB(req.body);
+  }
+  // await UserServices.createTutorProfileIntoDB(req.body);
 
   sendResponse(res, {
     statusCode: 201,
