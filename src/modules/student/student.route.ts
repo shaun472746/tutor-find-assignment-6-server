@@ -24,5 +24,28 @@ router.get(
   StudentControllers.getAcceptedBookingRequest
 );
 
-// router.post('/make-payment', auth(USER_ROLE.student));
+router.post(
+  '/make-payment',
+  auth(USER_ROLE.student),
+  validateMiddleware(studentValidations.bookingPaymentValidationSchema),
+  StudentControllers.createPaymentController
+);
+
+router.get(
+  '/payment-verify',
+  auth(USER_ROLE.student),
+  StudentControllers.verifyPayment
+);
+router.get(
+  '/past-bookings',
+  auth(USER_ROLE.student),
+  StudentControllers.getPastBookings
+);
+
+router.get(
+  '/payment-history',
+  auth(USER_ROLE.student),
+  StudentControllers.getPaymentHistory
+);
+
 export const StudentRoutes = router;

@@ -44,24 +44,58 @@ const getAcceptedBookingRequest = catchAsync(async (req, res) => {
 });
 
 // make payment
-// const createPaymentController = catchAsync(async (req, res) => {
-//   const result = await StudentServices.createPaymentIntoDB(
-//     req.body,
-//     req.ip!,
-//     req.user
-//   );
+const createPaymentController = catchAsync(async (req, res) => {
+  const result = await StudentServices.createPaymentIntoDB(req.body, req.ip!);
 
-//   sendResponse(res, {
-//     statusCode: 200,
-//     success: true,
-//     message: 'payment created successfully!',
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'payment created successfully!',
+    data: result,
+  });
+});
+
+const verifyPayment = catchAsync(async (req, res) => {
+  const result = await StudentServices.verifyPayment(
+    req.query.order_id as string
+  );
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: 'Booking request verified successfully',
+    data: result,
+  });
+});
+
+const getPastBookings = catchAsync(async (req, res) => {
+  const result = await StudentServices.getPastBookingsFromDB();
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Past bookings retrieved successfully',
+    data: result,
+  });
+});
+
+const getPaymentHistory = catchAsync(async (req, res) => {
+  const result = await StudentServices.getPaymentHistoryFromDB(req.user);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Payment history retrieved successfully',
+    data: result,
+  });
+});
 
 export const StudentControllers = {
   createStudentProfile,
   getStudentProfileDetail,
   getAcceptedBookingRequest,
-  // createPaymentController,
+  createPaymentController,
+  verifyPayment,
+  getPastBookings,
+  getPaymentHistory,
 };

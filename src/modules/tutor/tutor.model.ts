@@ -30,6 +30,7 @@ const AcceptRequestSchema = new Schema<TAcceptedRequest>(
       ref: 'User',
       required: true,
     },
+    available: { type: Boolean, default: true },
     tutor: {
       type: Schema.Types.ObjectId,
       ref: 'User',

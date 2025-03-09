@@ -26,6 +26,7 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",
+    "shurjopay": "^0.12.1",
     "sonner": "^2.0.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.2",

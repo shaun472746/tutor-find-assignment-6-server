@@ -27,4 +27,5 @@ export type TAcceptedRequest = {
   class: string;
   time_slot: string;
   subject: string;
+  available: boolean;
 };
