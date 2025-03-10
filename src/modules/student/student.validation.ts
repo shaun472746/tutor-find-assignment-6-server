@@ -45,7 +45,15 @@ const studentValidationSchema = z.object({
   }),
 });
 
+const tutorRatingValidationSchema = z.object({
+  body: z.object({
+    tutorId: z.string({ required_error: 'Tutor Id is required.' }),
+    rate: z.number({ required_error: 'Rate is required.' }),
+  }),
+});
+
 export const studentValidations = {
   studentValidationSchema,
   bookingPaymentValidationSchema,
+  tutorRatingValidationSchema,
 };

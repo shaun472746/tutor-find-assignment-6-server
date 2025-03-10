@@ -124,6 +124,16 @@ const getUserProfileDetail = catchAsync(async (req, res) => {
   });
 });
 
+const uploadProfileImgController = catchAsync(async (req, res) => {
+  await UserServices.profileImageUploadIntoDB(req.body, req.user);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Profile image uploaded succesfully!',
+  });
+});
+
 export const UserControllers = {
   createUser,
   userLogin,
@@ -134,4 +144,5 @@ export const UserControllers = {
   createTutorProfile,
   getUserInfo,
   getUserProfileDetail,
+  uploadProfileImgController,
 };

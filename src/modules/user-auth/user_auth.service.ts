@@ -23,6 +23,7 @@ const createUserIntoDB = async (user: TUser) => {
     userId: result._id,
     name: result.name,
     updateProfile: result.updateProfile,
+    imageUrl: result.imageUrl,
   };
 
   const accessToken = createToken(
@@ -63,6 +64,7 @@ const loginUser = async (payload: TLoginUser) => {
     userId: user._id,
     name: user.name,
     updateProfile: user.updateProfile,
+    imageUrl: user.imageUrl,
   };
 
   const accessToken = createToken(
@@ -116,6 +118,8 @@ const refreshToken = async (token: string) => {
     role: user.role,
     userId: user._id,
     name: user.name,
+    updateProfile: user.updateProfile,
+    imageUrl: user.imageUrl,
   };
 
   const accessToken = createToken(
@@ -174,6 +178,7 @@ const getUserFromDB = async (userId: string) => {
     userId: user!._id,
     name: user!.name,
     updateProfile: user!.updateProfile,
+    imageUrl: user.imageUrl,
   };
 
   const accessToken = createToken(
@@ -222,6 +227,18 @@ const getUserProfileFromDB = async (id: string) => {
   const profile = (await TutorProfile.findOne({ id: id })) as ITutorProfile;
   return profile;
 };
+const profileImageUploadIntoDB = async (
+  data: { url: string },
+  user: JwtPayload
+) => {
+  try {
+    await User.findByIdAndUpdate(user.userId, {
+      $set: { imageUrl: data.url },
+    });
+  } catch (err: any) {
+    throw new AppError(403, err);
+  }
+};
 
 export const UserServices = {
   createUserIntoDB,
@@ -234,4 +251,5 @@ export const UserServices = {
   getUserFromDB,
   getUserProfileFromDB,
   updateTutorProfileData,
+  profileImageUploadIntoDB,
 };

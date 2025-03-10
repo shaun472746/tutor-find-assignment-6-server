@@ -48,4 +48,11 @@ router.get(
   StudentControllers.getPaymentHistory
 );
 
+router.post(
+  '/update-tutor-rating',
+  auth(USER_ROLE.student),
+  validateMiddleware(studentValidations.tutorRatingValidationSchema),
+  StudentControllers.updateTutorRating
+);
+
 export const StudentRoutes = router;

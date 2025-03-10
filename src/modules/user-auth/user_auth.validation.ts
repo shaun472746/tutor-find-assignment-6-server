@@ -46,6 +46,12 @@ const updatePasswordValidationSchema = z.object({
   }),
 });
 
+const uploadProfileImageValidationSchema = z.object({
+  body: z.object({
+    url: z.string({ required_error: 'Image url is required.' }),
+  }),
+});
+
 const refreshTokenValidationSchema = z.object({
   cookies: z.object({
     refreshToken: z.string({
@@ -93,4 +99,5 @@ export const userValidations = {
   refreshTokenValidationSchema,
   updatePasswordValidationSchema,
   tutorValidationSchema,
+  uploadProfileImageValidationSchema,
 };

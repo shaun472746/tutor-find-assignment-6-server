@@ -188,6 +188,22 @@ const getPaymentHistoryFromDB = async (user: JwtPayload) => {
   }
 };
 
+const updateTutorRatingIntoDB = async (rating: {
+  rate: number;
+  tutorId: string;
+}) => {
+  try {
+    await TutorProfile.findOneAndUpdate(
+      { id: rating.tutorId },
+      {
+        $set: { rating: rating.rate },
+      }
+    );
+  } catch (err: any) {
+    throw new Error(err);
+  }
+};
+
 export const StudentServices = {
   createStudentProfileIntoDB,
   updateStudentProfileData,
@@ -197,4 +213,5 @@ export const StudentServices = {
   verifyPayment,
   getPastBookingsFromDB,
   getPaymentHistoryFromDB,
+  updateTutorRatingIntoDB,
 };

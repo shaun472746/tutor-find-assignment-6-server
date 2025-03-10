@@ -11,6 +11,7 @@ const userSchema = new Schema<TUser>(
     role: { type: String, enum: ['tutor', 'student'] },
     isBlocked: { type: Boolean, default: false },
     updateProfile: { type: Boolean, default: true },
+    imageUrl: { type: String, default: '' },
   },
   {
     timestamps: true,

@@ -90,6 +90,17 @@ const getPaymentHistory = catchAsync(async (req, res) => {
   });
 });
 
+const updateTutorRating = catchAsync(async (req, res) => {
+  const result = await StudentServices.updateTutorRatingIntoDB(req.body);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Tutor rating updated successfully',
+    data: result,
+  });
+});
+
 export const StudentControllers = {
   createStudentProfile,
   getStudentProfileDetail,
@@ -98,4 +109,5 @@ export const StudentControllers = {
   verifyPayment,
   getPastBookings,
   getPaymentHistory,
+  updateTutorRating,
 };

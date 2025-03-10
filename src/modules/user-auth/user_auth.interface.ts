@@ -10,6 +10,7 @@ export interface TUser {
   isBlocked: boolean;
   passwordChangedAt?: Date;
   updateProfile: boolean;
+  imageUrl?: string;
 }
 
 export type TLoginUser = {

@@ -27,6 +27,13 @@ router.post(
   UserControllers.createTutorProfile
 );
 
+router.post(
+  '/upload-profile-image',
+  auth(USER_ROLE.student, USER_ROLE.tutor),
+  validateMiddleware(userValidations.uploadProfileImageValidationSchema),
+  UserControllers.uploadProfileImgController
+);
+
 router.get('/get-user-detail/:userId', UserControllers.getUserInfo);
 router.get(
   '/tutor-profile-detail/:userId',
