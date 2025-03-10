@@ -23,7 +23,7 @@ const createPaymentIntoDB = async (
 
     await TutorProfile.findOneAndUpdate(
       { id: bookingPayment.tutorId },
-      { $set: { totalEarning: totalAmount } },
+      { $inc: { totalEarning: totalAmount } },
       { session }
     );
 
@@ -150,15 +150,15 @@ const getAcceptedBookingFromDB = async () => {
   }
 };
 
-const getPastBookingsFromDB = async () => {
+const getPastBookingsFromDB = async (user: JwtPayload) => {
   try {
-    const result = await AcceptRequestModel.find({ available: false }).populate(
-      {
-        path: 'tutor',
-        select:
-          '-password -createdAt -updatedAt -__v -isBlocked -updateProfile',
-      }
-    );
+    const result = await AcceptRequestModel.find({
+      available: false,
+      student: user.userId,
+    }).populate({
+      path: 'tutor',
+      select: '-password -createdAt -updatedAt -__v -isBlocked -updateProfile',
+    });
 
     return result;
   } catch (err: any) {

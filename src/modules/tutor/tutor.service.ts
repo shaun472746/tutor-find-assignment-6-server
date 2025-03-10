@@ -17,6 +17,7 @@ const filterApplication = async (params: any) => {
         rate: rate,
       })
     ),
+
     isBlocked: isBlocked,
   };
 
@@ -30,10 +31,31 @@ const filterApplication = async (params: any) => {
     });
   }
   return await queryBuilder
-    .filter() // Apply filters first
-    .filterByCity(location) // Filter by city
-    .joinAndFilterByIsBlocked() // Join users and filter by isBlocked
+    .filter()
+    .filterByCity(location)
+    .joinAndFilterByIsBlocked()
     .execute();
+};
+
+const applySearch = async (params: any) => {
+  const { search, isBlocked } = params;
+  const query = {
+    search: encodeURIComponent(
+      JSON.stringify({
+        search: search,
+      })
+    ),
+    isBlocked: isBlocked,
+  };
+  // Initialize the QueryBuilder
+  const queryBuilder = new QueryBuilder(
+    TutorProfile.find().populate({
+      path: 'id',
+      select: 'name',
+    }),
+    query
+  );
+  return await queryBuilder.search(['subjects', 'id.name']).execute();
 };
 
 const applySorting = async (params: any) => {
@@ -61,6 +83,9 @@ const getTutorProfileFromDB = async (params: any) => {
     const result = await applySorting(params);
 
     return result;
+  }
+  if (params.search) {
+    return await applySearch(params);
   }
 
   return await filterApplication(params);

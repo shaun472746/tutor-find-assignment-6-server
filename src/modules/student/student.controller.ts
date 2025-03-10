@@ -69,7 +69,7 @@ const verifyPayment = catchAsync(async (req, res) => {
 });
 
 const getPastBookings = catchAsync(async (req, res) => {
-  const result = await StudentServices.getPastBookingsFromDB();
+  const result = await StudentServices.getPastBookingsFromDB(req.user);
 
   sendResponse(res, {
     statusCode: 200,
