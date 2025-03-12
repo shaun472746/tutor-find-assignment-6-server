@@ -67,4 +67,6 @@ router.get(
   StudentControllers.getProfileDetailTestimonial
 );
 
+router.get('/get-all-newslist/:value', StudentControllers.getBlogNews);
+
 export const StudentRoutes = router;

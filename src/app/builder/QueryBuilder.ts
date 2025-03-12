@@ -78,8 +78,16 @@ class QueryBuilder<T> {
         filter['subjects'] = queryObj.subject;
       }
       if (queryObj.rating) {
-        filter['rating'] = { $lte: parseFloat(queryObj.rating) };
+        const parsedRating = parseFloat(queryObj.rating);
+        // Add average rating calculation to the pipeline
+        this.pipeline.push({
+          $addFields: {
+            averageRating: { $avg: '$rating.rate' }, // Compute average of `rate` values
+          },
+        });
+        filter['averageRating'] = { $lte: parsedRating }; // Use computed field
       }
+
       if (queryObj.rate) {
         filter['hourly_rate'] = { $lte: parseFloat(queryObj.rate) };
       }
@@ -204,7 +212,7 @@ class QueryBuilder<T> {
 
   // Execute the aggregation pipeline
   async execute() {
-    console.log(JSON.stringify(this.pipeline, null, 2));
+    // console.log(JSON.stringify(this.pipeline, null, 2));
     return await this.modelQuery.model.aggregate(this.pipeline);
   }
 }

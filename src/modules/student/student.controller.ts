@@ -129,6 +129,18 @@ const getProfileDetailTestimonial = catchAsync(async (req, res) => {
   });
 });
 
+const getBlogNews = catchAsync(async (req, res) => {
+  const { value } = req.params;
+  const result = await StudentServices.getBlogNewsFromExternalApi(value);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Blog news retrieved successfully!',
+    data: result,
+  });
+});
+
 export const StudentControllers = {
   createStudentProfile,
   getStudentProfileDetail,
@@ -140,4 +152,5 @@ export const StudentControllers = {
   updateTutorRating,
   getProfileDetail,
   getProfileDetailTestimonial,
+  getBlogNews,
 };

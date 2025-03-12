@@ -311,6 +311,24 @@ const getTutorProfileDetailTestimonialFromDB = async () => {
   }
 };
 
+const getBlogNewsFromExternalApi = async (value: string) => {
+  try {
+    const NewsAPI = require('newsapi');
+    const newsapi = new NewsAPI('c71f865612e84897acd71137b11f6577');
+
+    const res = await newsapi.v2.topHeadlines({
+      category: 'technology',
+      language: 'en',
+      country: 'us',
+      q: value,
+    });
+
+    return res.articles?.filter((item: any) => item.content);
+  } catch (err: any) {
+    throw new Error(err);
+  }
+};
+
 export const StudentServices = {
   createStudentProfileIntoDB,
   updateStudentProfileData,
@@ -323,4 +341,5 @@ export const StudentServices = {
   updateTutorRatingIntoDB,
   getTutorProfileDetailFromDB,
   getTutorProfileDetailTestimonialFromDB,
+  getBlogNewsFromExternalApi,
 };
