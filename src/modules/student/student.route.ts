@@ -55,4 +55,16 @@ router.post(
   StudentControllers.updateTutorRating
 );
 
+router.get(
+  '/get-tutor-profile-detail/:tutorId',
+  auth(USER_ROLE.student),
+  StudentControllers.getProfileDetail
+);
+
+router.get(
+  '/get-tutor-profile-detail-testimonial',
+
+  StudentControllers.getProfileDetailTestimonial
+);
+
 export const StudentRoutes = router;

@@ -51,7 +51,7 @@ export interface ITutorProfile {
   id: Types.ObjectId;
   expertise: string[]; // Define as an array
   subjects: string[];
-  rating?: number;
+  rating?: { id: Types.ObjectId; rate: number; review: string }[];
   image?: string;
   address: string;
   phone: string;

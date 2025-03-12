@@ -188,17 +188,124 @@ const getPaymentHistoryFromDB = async (user: JwtPayload) => {
   }
 };
 
-const updateTutorRatingIntoDB = async (rating: {
-  rate: number;
-  tutorId: string;
-}) => {
+const updateTutorRatingIntoDB = async (
+  rating: {
+    rate: number;
+    tutorId: string;
+    review: string;
+  },
+  user: JwtPayload
+) => {
   try {
-    await TutorProfile.findOneAndUpdate(
-      { id: rating.tutorId },
+    await TutorProfile.updateOne(
       {
-        $set: { rating: rating.rate },
+        id: rating.tutorId,
+        rating: {
+          $elemMatch: {
+            id: user?.userId,
+          },
+        },
+      },
+      {
+        $set: {
+          'rating.$.rate': rating.rate,
+          'rating.$.review': rating.review,
+        },
       }
     );
+  } catch (err: any) {
+    throw new Error(err);
+  }
+};
+
+const getTutorProfileDetailFromDB = async (
+  tutorId: string,
+  user: JwtPayload
+) => {
+  try {
+    const result = await TutorProfile.aggregate([
+      // Match the tutor by tutorId
+      {
+        $match: {
+          id: new mongoose.Types.ObjectId(tutorId),
+        },
+      },
+      // Filter ratings array to keep only the entry matching userId
+      {
+        $addFields: {
+          rating: {
+            $filter: {
+              input: '$rating',
+              as: 'r',
+              cond: {
+                $eq: ['$$r.id', new mongoose.Types.ObjectId(user.userId)],
+              },
+            },
+          },
+        },
+      },
+      // Reshape the output
+      {
+        $project: {
+          _id: 1,
+          id: 1,
+          expertise: 1,
+          subjects: 1,
+          address: 1,
+          phone: 1,
+          availability_slot: 1,
+          hourly_rate: 1,
+          totalEarning: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          __v: 1,
+          // Get first (and only) element from filtered ratings
+          rating: {
+            $cond: [
+              { $gt: [{ $size: '$rating' }, 0] },
+              { $arrayElemAt: ['$rating', 0] },
+              null,
+            ],
+          },
+        },
+      },
+    ]);
+    console.log(result[0]);
+    return result[0] || null;
+  } catch (err: any) {
+    throw new Error(err);
+  }
+};
+
+const getTutorProfileDetailTestimonialFromDB = async () => {
+  try {
+    const result = await TutorProfile.find().populate({
+      path: 'rating.id',
+      select: '-password -createdAt -updatedAt -__v -isBlocked -updateProfile',
+    });
+
+    return result?.map((tutor) => {
+      let avgRating = 0;
+      let bestEntryIndex = null;
+      if (tutor.rating?.length) {
+        // Calculate average rating
+        const total = tutor.rating.reduce((sum, entry) => sum + entry.rate, 0);
+        avgRating = total / tutor.rating.length;
+
+        // Find the best review (highest rated entry)
+        const maxRating = Math.max(...tutor.rating.map((entry) => entry.rate));
+        bestEntryIndex = tutor.rating.findIndex(
+          (entry) => entry.rate === maxRating
+        );
+      }
+      return {
+        rating: {
+          id: tutor?.rating?.[bestEntryIndex!].id,
+          rate: avgRating,
+          review: tutor?.rating?.[bestEntryIndex!].review,
+        },
+      };
+    });
   } catch (err: any) {
     throw new Error(err);
   }
@@ -214,4 +321,6 @@ export const StudentServices = {
   getPastBookingsFromDB,
   getPaymentHistoryFromDB,
   updateTutorRatingIntoDB,
+  getTutorProfileDetailFromDB,
+  getTutorProfileDetailTestimonialFromDB,
 };

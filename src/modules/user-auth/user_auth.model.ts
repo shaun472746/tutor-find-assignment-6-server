@@ -52,7 +52,13 @@ const TutorProfileSchema = new Schema<ITutorProfile>(
     id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     expertise: { type: [String], required: true },
     subjects: { type: [String], required: true },
-    rating: { type: Number, default: 0 },
+    rating: [
+      {
+        id: { type: Schema.Types.ObjectId, ref: 'User' },
+        rate: Number,
+        review: String,
+      },
+    ],
     image: { type: String },
     address: { type: String, required: true },
     phone: { type: String, required: true },

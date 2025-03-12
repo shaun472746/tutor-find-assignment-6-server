@@ -18,22 +18,19 @@ class QueryBuilder<T> {
         decodeURIComponent(this.query.search as string)
       );
       const { search } = searchObj;
-      console.log(searchableFields);
+
       // Build the $or conditions for the $match stage
-      // const orConditions = searchableFields.map((field) => {
-      //   if (field.includes('.')) {
-      //     // Handle nested fields (e.g., userId.name)
-      //     const [parentField, nestedField] = field.split('.');
-      //     return {
-      //       [parentField]: {
-      //         [nestedField]: { $regex: search, $options: 'i' }, // Fixed typo: $options
-      //       },
-      //     };
-      //   } else {
-      //     // Handle top-level fields
-      //     return { [field]: { $regex: search, $options: 'i' } };
-      //   }
-      // });
+      const orConditions = searchableFields.map((field) => {
+        return {
+          [field]: {
+            $regex: search
+              .replace(/[^a-zA-Z0-9 ]/g, '')
+              .toLowerCase()
+              .replace(/ /g, '.*'),
+            $options: 'i',
+          },
+        };
+      });
 
       // Add the $match stage to the pipeline
 
@@ -51,7 +48,7 @@ class QueryBuilder<T> {
         },
         {
           $match: {
-            'userDetails.name': { $regex: search, $options: 'i' },
+            $or: orConditions,
           },
         },
         {
@@ -59,17 +56,10 @@ class QueryBuilder<T> {
             'userDetails.createdAt': 0,
             'userDetails.password': 0,
             'userDetails.updatedAt': 0,
-            'userDetails._id': 0,
             'userDetails.__v': 0,
           },
         }
       );
-
-      // this.pipeline.push({
-      //   $match: {
-      //     $or: orConditions,
-      //   },
-      // });
     }
 
     return this;
@@ -214,6 +204,7 @@ class QueryBuilder<T> {
 
   // Execute the aggregation pipeline
   async execute() {
+    console.log(JSON.stringify(this.pipeline, null, 2));
     return await this.modelQuery.model.aggregate(this.pipeline);
   }
 }

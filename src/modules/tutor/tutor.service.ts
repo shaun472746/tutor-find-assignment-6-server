@@ -55,7 +55,7 @@ const applySearch = async (params: any) => {
     }),
     query
   );
-  return await queryBuilder.search(['subjects', 'id.name']).execute();
+  return await queryBuilder.search(['subjects', 'userDetails.name']).execute();
 };
 
 const applySorting = async (params: any) => {

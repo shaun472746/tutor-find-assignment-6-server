@@ -91,12 +91,40 @@ const getPaymentHistory = catchAsync(async (req, res) => {
 });
 
 const updateTutorRating = catchAsync(async (req, res) => {
-  const result = await StudentServices.updateTutorRatingIntoDB(req.body);
+  const result = await StudentServices.updateTutorRatingIntoDB(
+    req.body,
+    req.user
+  );
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: 'Tutor rating updated successfully',
+    data: result,
+  });
+});
+
+const getProfileDetail = catchAsync(async (req, res) => {
+  const { tutorId } = req.params;
+  const result = await StudentServices.getTutorProfileDetailFromDB(
+    tutorId,
+    req.user
+  );
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Tutor profile detail retrieved successfully!',
+    data: result,
+  });
+});
+const getProfileDetailTestimonial = catchAsync(async (req, res) => {
+  const result = await StudentServices.getTutorProfileDetailTestimonialFromDB();
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'All Tutors retrieved successfully!',
     data: result,
   });
 });
@@ -110,4 +138,6 @@ export const StudentControllers = {
   getPastBookings,
   getPaymentHistory,
   updateTutorRating,
+  getProfileDetail,
+  getProfileDetailTestimonial,
 };
