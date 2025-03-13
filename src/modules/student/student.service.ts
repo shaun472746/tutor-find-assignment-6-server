@@ -197,21 +197,71 @@ const updateTutorRatingIntoDB = async (
   user: JwtPayload
 ) => {
   try {
+    // await TutorProfile.updateOne(
+    //   {
+    //     id: rating.tutorId,
+    //     rating: {
+    //       $elemMatch: {
+    //         id: user?.userId,
+    //       },
+    //     },
+    //   },
+    //   {
+    //     $set: {
+    //       'rating.$.rate': rating.rate,
+    //       'rating.$.review': rating.review,
+    //     },
+    //   }
+    // );
+
     await TutorProfile.updateOne(
-      {
-        id: rating.tutorId,
-        rating: {
-          $elemMatch: {
-            id: user?.userId,
+      { id: new mongoose.Types.ObjectId(rating.tutorId) },
+      [
+        {
+          $set: {
+            rating: {
+              $cond: [
+                {
+                  $in: [new mongoose.Types.ObjectId(user.userId), '$rating.id'],
+                },
+                {
+                  $map: {
+                    input: '$rating',
+                    in: {
+                      $cond: [
+                        {
+                          $eq: [
+                            '$$this.id',
+                            new mongoose.Types.ObjectId(user.userId),
+                          ],
+                        },
+                        {
+                          id: '$$this.id',
+                          rate: rating.rate,
+                          review: rating.review,
+                        },
+                        '$$this',
+                      ],
+                    },
+                  },
+                },
+                {
+                  $concatArrays: [
+                    '$rating',
+                    [
+                      {
+                        id: new mongoose.Types.ObjectId(user.userId),
+                        rate: rating.rate,
+                        review: rating.review,
+                      },
+                    ],
+                  ],
+                },
+              ],
+            },
           },
         },
-      },
-      {
-        $set: {
-          'rating.$.rate': rating.rate,
-          'rating.$.review': rating.review,
-        },
-      }
+      ]
     );
   } catch (err: any) {
     throw new Error(err);
@@ -270,7 +320,7 @@ const getTutorProfileDetailFromDB = async (
         },
       },
     ]);
-    console.log(result[0]);
+
     return result[0] || null;
   } catch (err: any) {
     throw new Error(err);
