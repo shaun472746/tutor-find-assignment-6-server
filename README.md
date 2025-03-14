@@ -304,3 +304,7 @@ Now, project setup is done. Hit the api described below to get the expected resu
   "id": "created booking request"
 }
 ```
+
+# Changes in code
+
+In app.ts, change origin as your client website address.
