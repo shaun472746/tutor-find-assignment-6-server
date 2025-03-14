@@ -10,9 +10,9 @@ const app: Application = express();
 app.use(express.json());
 app.use(
   cors({
-    // origin: ["http://localhost:3000"],
-    origin: ['https://tutor-find-assignment-6-client.vercel.app'],
-    credentials: true,
+    origin: ['http://localhost:3000'],
+    // origin: ['https://tutor-find-assignment-6-client.vercel.app'],
+    // credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
