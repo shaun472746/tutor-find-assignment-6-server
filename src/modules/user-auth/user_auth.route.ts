@@ -42,7 +42,7 @@ router.get(
 
 router.post(
   '/refresh-token',
-  validateMiddleware(userValidations.refreshTokenValidationSchema),
+  // validateMiddleware(userValidations.refreshTokenValidationSchema),
   UserControllers.refreshToken
 );
 

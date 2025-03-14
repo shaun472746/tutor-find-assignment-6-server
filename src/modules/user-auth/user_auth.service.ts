@@ -87,10 +87,12 @@ const loginUser = async (payload: TLoginUser) => {
 
 const refreshToken = async (token: string) => {
   // checking if the given token is valid
+
   const decoded = jwt.verify(
     token,
     config.jwt_refresh_secret as string
   ) as JwtPayload;
+
   const { iat, userEmail } = decoded;
 
   // checking if the user is exist
